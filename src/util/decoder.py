@@ -15,7 +15,12 @@ def decoder_test(req):
                 elif len(req) >= 3:
                     topic += f'{req[0]}'
                     topic += f'/{req[1]}/info'
-                    msg = rf'{req[1]}_{req[2]}'
+                    temp = req[2]
+                    if req[2] == 'ON':
+                        temp = 255
+                    elif req[2] == 'OFF':
+                        temp = 0
+                    msg = rf'{temp}'
     except IndexError:
         print("Unavailable Request")
     print(topic)

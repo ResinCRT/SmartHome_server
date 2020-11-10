@@ -1,12 +1,10 @@
-from mqtt.mqtt import MqttSub
-from DBmanager import *
-from utilsocket import DbSocket, FileSocket
-from myparser import get_arguments
-from emergency import *
-from decoder import *
+from src.util.mqtt import MqttSub
+from src.util.DBmanager import *
+from src.net_server.utilsocket import DbSocket, FileSocket
+from src.util.myparser import get_arguments
+from src.net_server.emergency import *
 import json
 import time
-from android_socket import AndroidSocket
 import threading
 
 def mqtt_main():
@@ -99,10 +97,6 @@ def mqtt_main():
     publish_by_time(3)
     while True:
         print("main thread running")
-        data = input(">>")
-        if data == 'q':
-            with open('setting.conf', "w", encoding='utf8') as f:
-                soc.getJson(f)
         time.sleep(4)
 
 

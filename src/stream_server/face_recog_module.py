@@ -3,7 +3,7 @@
 import face_recognition
 import os
 import cv2
-from USBcam import USBCam
+from src.util.USBcam import USBCam
 import numpy as np
 
 class FaceRecog():

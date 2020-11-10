@@ -1,5 +1,5 @@
-from android_socket import AndroidSocket
-from decoder import msg_to_tuple, decoder_test
+from src.util.android_socket import AndroidSocket
+from src.util.decoder import msg_to_tuple, decoder_test
 import threading
 from _thread import start_new_thread
 import json

@@ -1,7 +1,6 @@
 import multiprocessing as mp
-from Fserver import stream_main
-from server import mqtt_main
-import sys
+from src.stream_server.stream_server import stream_main
+from src.net_server.net_server import mqtt_main
 
 if __name__ == '__main__':
     mp.set_start_method('spawn')

@@ -1,12 +1,9 @@
 from flask import Flask
 from flask import render_template
 from flask import Response
-from USBcam import *
-from face_recog_module import FaceRecog
-from face_module import FaceModule
-from myparser import get_arguments
-import cv2
-import sys
+from src.util.USBcam import *
+from src.stream_server.face_module import FaceModule
+from src.util.myparser import get_arguments
 
 app = Flask(__name__)
 

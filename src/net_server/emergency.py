@@ -1,6 +1,6 @@
 # conf를 읽어서
 import json
-from decoder import msg_to_tuple
+from src.util.decoder import msg_to_tuple
 
 
 def get_conf():

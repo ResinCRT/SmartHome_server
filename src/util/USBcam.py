@@ -1,5 +1,7 @@
 import cv2
 import time
+
+
 class USBCam:
     def __init__(self, show=False, framerate=25,width=640,height=480):
         self.size = (width, height)
