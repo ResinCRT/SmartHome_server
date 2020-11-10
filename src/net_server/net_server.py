@@ -23,8 +23,9 @@ def mqtt_main():
     subscriber = MqttSub(host, topic)
     print(subscriber)
 
-    test_db = MongoManager("localhost")
-    test_db.connect_db()
+    # test_db = MongoManager("localhost")
+    # test_db.connect_db()
+
     filesoc = FileSocket("", file_port)
     soc = DbSocket("", server_port)
     print(soc)
@@ -59,7 +60,6 @@ def mqtt_main():
             return
         # <<<<
         # decode ordermsg to target topic(dict)
-
         # <<<<
         try:
             print("message arrived from socket")

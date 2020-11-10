@@ -42,10 +42,6 @@ class MqttNode:
         self.client.loop_forever()
 
 
-
-
-
-
 class MqttSub(MqttNode):
 
     def __init__(self, server, topic):

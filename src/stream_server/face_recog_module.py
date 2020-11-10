@@ -110,6 +110,7 @@ class FaceRecog():
             frame = self.get_jpg_bytes()
             yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
+
 if __name__ == '__main__':
     face_recog = FaceRecog()
     print(face_recog.known_face_names)

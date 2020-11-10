@@ -1,6 +1,7 @@
 from src.stream_server.face_recog_module import FaceRecog
 from src.util.mqtt import MqttNode
 
+
 class FaceModule(FaceRecog):
     def __init__(self, host, topic, path):
         super().__init__(path)
@@ -13,7 +14,6 @@ class FaceModule(FaceRecog):
     def init(self):
         self.node.connect_default()
         self.node.run_loop()
-
 
 
 if __name__ == "__main__":
