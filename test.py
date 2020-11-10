@@ -15,29 +15,40 @@ if __name__ == "__main__":
     soc = MqttNode(host)
     soc.set_topic('#')
     soc.connect_default()
-    datas = {}
-    datas['Humi'] = 10
-    datas['Temp'] = 35
-    datas2 = {}
-    datas2['Brig'] = 255
-    datas2['Stat'] = 1
-    datas3 = {}
-    datas3['Win'] = 5
     while True:
-        out = json.dumps(datas)
-        datas['Temp'] += 1
-        datas['Humi'] += 1
-        soc.client.publish('iot3/living/DHT', out, 1)
-        print('data1')
-        time.sleep(2)
-        out2 = json.dumps(datas2)
-        datas2['Brig'] += 1
-        datas2['Stat'] *= -1
-        soc.client.publish('iot3/inner/LED', out2, 1)
-        print('data2')
-        time.sleep(2)
-        out3 = json.dumps(datas3)
-        datas3['Win'] += 1
-        soc.client.publish('iot3/living/window', out3, 1)
-        print('data3')
-        time.sleep(2)
+        ins = input(">>")
+        PIR = {}
+        waterSensor = {}
+        waterSensor['waterSensor'] = int(ins.split()[1])
+        PIR['PIR'] = int(ins.split()[0])
+        out_P = json.dumps(PIR)
+        out_w = json.dumps(waterSensor)
+        soc.client.publish('iot3/toilet/PIR', out_P, 1)
+        time.sleep(1)
+        soc.client.publish('iot3/toilet/waterSensor', out_w, 1)
+    # datas = {}
+    # datas['Humi'] = 10
+    # datas['Temp'] = 35
+    # datas2 = {}
+    # datas2['Brig'] = 255
+    # datas2['Stat'] = 1
+    # datas3 = {}
+    # datas3['Win'] = 5
+    # while True:
+    #     out = json.dumps(datas)
+    #     datas['Temp'] += 1
+    #     datas['Humi'] += 1
+    #     soc.client.publish('iot3/living/DHT', out, 1)
+    #     print('data1')
+    #     time.sleep(2)
+    #     out2 = json.dumps(datas2)
+    #     datas2['Brig'] += 1
+    #     datas2['Stat'] *= -1
+    #     soc.client.publish('iot3/inner/LED', out2, 1)
+    #     print('data2')
+    #     time.sleep(2)
+    #     out3 = json.dumps(datas3)
+    #     datas3['Win'] += 1
+    #     soc.client.publish('iot3/living/window', out3, 1)
+    #     print('data3')
+    #     time.sleep(2)

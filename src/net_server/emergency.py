@@ -1,33 +1,71 @@
 # conf를 읽어서
 import json
+import time
 from src.util.decoder import msg_to_tuple
 
 
-def get_conf():
-    # return array of emergency
-    setting = {}
-    with open('setting.conf') as f:
+
+
+class Emergency:
+
+    def __init__(self):
+        self.timestamp = {}
+        self.conf = None
+
+    def init(self):
+        self.conf = self.get_conf()
+
+    def get_conf(self):
+        # return array of emergency
+        setting = {}
         try:
-            setting = json.load(f)
+            with open('setting.conf') as f:
+                setting = json.load(f)
+        except FileNotFoundError:
+            with open('setting.conf', 'w') as f:
+                f.write('{}')
         except Exception as e:
             print(e)
-    return setting
+        return setting
+
+    def check_emergency(self, msg, client, conf=None):
+        room, sensor, data = msg_to_tuple(msg)
+        # if not conf:
+        #     conf = get_conf()
+        conf = self.conf
+        if room in conf:
+            if sensor in conf[room]:
+                for opt, dat in data.items():
+                    if opt in conf[room][sensor]:
+                        comp = conf[room][sensor][opt]
+                        # 상하 수치 체크
+                        if ((comp[1] == "HIGH" and comp[0] < dat)
+                         or (comp[1] == "LOW" and comp[0] > dat)):
+                            client.publish(f'iot_app/emergency', f'{room}/{sensor}/{opt}/{comp[1]}', 2)
+
+    def check_toilet(self, datas, client):
+        PIR_state = False
+        water_state = False
+
+        if 'toilet' in datas:
+            if 'PIR' in datas['toilet']:
+                PIR_state = bool(datas['toilet']['PIR']['PIR'])
+            if 'waterSensor' in datas['toilet']:
+                water_state = bool(datas['toilet']['waterSensor']['waterSensor'])
+            # print(f'PIR : {PIR_state} \nwater : {water_state}')
+            if not PIR_state and water_state and 'toilet' not in self.timestamp:
+                self.timestamp['toilet'] = [time.time(), 30]
+                print('toilet count start')
+            elif not PIR_state and water_state and 'toilet' in self.timestamp:
+                if time.time() - self.timestamp['toilet'][0] >= self.timestamp['toilet'][1]:
+                    print('30sec passed')
+                    client.publish(f'iot_app/emergency', f'toilet/waterSensor/flood', 2)
+            elif not (not PIR_state and water_state) and 'toilet' in self.timestamp:
+                self.timestamp.pop('toilet', None)
+                client.publish(f'iot_app/emergency', f'toilet/waterSensor/stopped', 2)
 
 
-def check_emergency(msg, client, conf=None):
-    room, sensor, data = msg_to_tuple(msg)
-    if not conf:
-        conf = get_conf()
-
-    if room in conf:
-        if sensor in conf[room]:
-            for opt, dat in data.items():
-                if opt in conf[room][sensor]:
-                    comp = conf[room][sensor][opt]
-                    if ((comp[1] == "HIGH" and comp[0] < dat)
-                     or (comp[1] == "LOW" and comp[0] > dat)):
-                        client.publish(f'iot_app/emergency', f'{room}/{sensor}/{opt}/{comp[1]}', 2)
 
 
 if __name__ == "__main__":
-    get_conf()
+    pass

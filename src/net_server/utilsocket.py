@@ -87,11 +87,9 @@ class FileSocket(AndroidSocket):
     def set_file(self, name):
         self.file_name = name
 
-
-
     def receive_thread(self, client_socket, addr):
         try:
-            ## 파일 크기 수신
+            # 파일 크기 수신
             datas = client_socket.recv(1024)
 
             name, size = datas.decode('utf-8').split()
@@ -122,7 +120,6 @@ class FileSocket(AndroidSocket):
 
         finally:
             client_socket.close()
-
 
     def run(self):
         def runth():

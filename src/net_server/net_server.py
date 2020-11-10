@@ -14,7 +14,10 @@ def mqtt_main():
     if host == None:  # set Default host IP and mqtt Topic
         host = "192.168.0.6"
         topic = "iot3/#"
-    conf = get_conf()
+    emerg = Emergency()
+    emerg.init()
+    print(emerg.conf)
+
     print(host)
     print(topic)
     subscriber = MqttSub(host, topic)
@@ -43,8 +46,8 @@ def mqtt_main():
         print("message:", datas)
         try:
             # json_data = json.loads(datas)
-            check_emergency(msg, subscriber.client, conf)
             soc.update_dict(msg)
+            emerg.check_emergency(msg, subscriber.client)
         except json.JSONDecodeError:
             print("JSON decode fail : msg is not JSON")
         # subscriber.client.publish('IoT3/home/living/LED/info', r'send_to_LED', 1)
@@ -76,6 +79,7 @@ def mqtt_main():
             while True:
                 subscriber.client.publish('iot_app', soc.getJson(), 1)
                 time.sleep(timer)
+                emerg.check_toilet(soc.dict_data, subscriber.client)
 
         t = threading.Thread(target=publishing)
         t.setDaemon(True)
