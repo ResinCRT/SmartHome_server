@@ -1,6 +1,6 @@
 from mqtt.mqtt import MqttSub
 from DBmanager import *
-from utilsocket import DbSocket
+from utilsocket import DbSocket, FileSocket
 from myparser import get_arguments
 from decoder import *
 import json
@@ -11,6 +11,7 @@ import threading
 def mqtt_main():
     host, topic = get_arguments()
     server_port = 8888
+    file_port = 8890
     if host == None:  # set Default host IP and mqtt Topic
         host = "192.168.0.6"
         topic = "IoT3/home/#"
@@ -22,9 +23,10 @@ def mqtt_main():
 
     test_db = MongoManager("localhost")
     test_db.connect_db()
-
+    filesoc = FileSocket("", file_port)
     soc = DbSocket("", server_port)
     print(soc)
+    print(filesoc)
     # soc = AndroidSocket("", server_port)
     def store_DB(client, userdata, msg):
         message = msg.payload.json()
@@ -89,6 +91,9 @@ def mqtt_main():
     subscriber.run_loop()
     # socket open
     soc.run()
+    filesoc.set_file('test.txt')
+    filesoc.set_path('static/knowns')
+    filesoc.run()
     publish_by_time(3)
     while True:
         print("main thread running")

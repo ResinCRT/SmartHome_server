@@ -17,13 +17,13 @@ class FaceRecog():
         self.known_face_names = []
 
         # Load sample pictures and learn how to recognize it.
-        dirname = path
-        files = os.listdir(dirname)
+        self.dirname = path
+        files = os.listdir(self.dirname)
         for filename in files:
             name, ext = os.path.splitext(filename)
             if ext == '.jpg':
                 self.known_face_names.append(name)
-                pathname = os.path.join(dirname, filename)
+                pathname = os.path.join(self.dirname, filename)
                 img = face_recognition.load_image_file(pathname)
                 face_encoding = face_recognition.face_encodings(img)[0]
                 self.known_face_encodings.append(face_encoding)

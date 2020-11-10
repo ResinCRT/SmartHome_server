@@ -24,7 +24,7 @@ def video_fed():
 @app.route('/video_feed')
 def video_feed():
     host, _ = flask_arguments()
-    rec = FaceModule(host, 'iot_app/unknown')
+    rec = FaceModule(host, 'iot_app/unknown', 'static/knowns')
     rec.init()
     return Response(rec.run(), mimetype='multipart/x-mixed-replace; boundary=frame')
 

@@ -2,8 +2,8 @@ from face_recog_module import FaceRecog
 from mqtt.mqtt import MqttNode
 
 class FaceModule(FaceRecog):
-    def __init__(self, host, topic):
-        super().__init__()
+    def __init__(self, host, topic, path):
+        super().__init__(path)
         self.node = MqttNode(host)
         self.node.set_topic(topic)
 
