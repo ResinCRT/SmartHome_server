@@ -1,7 +1,6 @@
 # face_recog.py
 
 import face_recognition
-from facecam import FaceCam
 import os
 import cv2
 from USBcam import USBCam
@@ -28,7 +27,6 @@ class FaceRecog():
                 img = face_recognition.load_image_file(pathname)
                 face_encoding = face_recognition.face_encodings(img)[0]
                 self.known_face_encodings.append(face_encoding)
-        print(self.known_face_encodings)
         # Initialize some variables
         self.face_locations = []
         self.face_encodings = []
@@ -38,7 +36,11 @@ class FaceRecog():
     def __del__(self):
         del self.camera
 
+    def recog_action(self, frame):
+        pass
+
     def get_frame(self):
+        action = False
         # Grab a single frame of video
         _, frame = self.camera.get_raw_frame()
         # Resize frame of video to 1/4 size for faster face recognition processing
@@ -69,6 +71,8 @@ class FaceRecog():
                 if min_value < 0.6:
                     index = np.argmin(distances)
                     name = self.known_face_names[index]
+                else:
+                    action = True
 
                 self.face_names.append(name)
 
@@ -89,7 +93,8 @@ class FaceRecog():
             cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
             font = cv2.FONT_HERSHEY_DUPLEX
             cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-
+        if action:
+            self.recog_action(frame)
         return frame
 
     def get_jpg_bytes(self):

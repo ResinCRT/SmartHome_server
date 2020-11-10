@@ -8,7 +8,7 @@ import time
 from android_socket import AndroidSocket
 import threading
 
-def main():
+def mqtt_main():
     host, topic = get_arguments()
     server_port = 8888
     if host == None:  # set Default host IP and mqtt Topic
@@ -96,6 +96,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    mqtt_main()
 
 

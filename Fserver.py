@@ -3,8 +3,10 @@ from flask import render_template
 from flask import Response
 from USBcam import *
 from face_recog_module import FaceRecog
+from face_module import FaceModule
 from myparser import get_arguments
 import cv2
+import sys
 
 app = Flask(__name__)
 
@@ -21,7 +23,9 @@ def video_fed():
 
 @app.route('/video_feed')
 def video_feed():
-    rec = FaceRecog()
+    host, _ = flask_arguments()
+    rec = FaceModule(host, 'iot_app/unknown')
+    rec.init()
     return Response(rec.run(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
@@ -41,11 +45,16 @@ def gen(fr):
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + jpg_bytes + b'\r\n\r\n')
 
-def stream_main():
-    host, _= get_arguments()
+def flask_arguments():
+    host, _ = get_arguments()
+    topic = 'iot_app'
     if not host:
         host = '192.168.0.6'
-    app.run(host=host, port=7072, debug=True)
+    return host, topic
+
+def stream_main():
+    host, _ = flask_arguments()
+    app.run(host=host, port=7072, debug=False)
 
 
 if __name__ == '__main__':
