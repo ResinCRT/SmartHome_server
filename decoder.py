@@ -14,7 +14,7 @@ def decoder_test(req):
                     msg = req
                 elif len(req) >= 3:
                     topic += f'{req[0]}'
-                    topic += f'/{req[1]}'
+                    topic += f'/{req[1]}/info'
                     msg = rf'{req[1]}_{req[2]}'
     except IndexError:
         print("Unavailable Request")
@@ -28,6 +28,10 @@ def msg_to_tuple(msg):
     data_dict = json.loads(data)
     output = {}
     topic = msg.topic.split('/')
-    return topic[-3], topic[-2], data_dict
+    try:
+        return topic[-2], topic[-1], data_dict
+    except Exception as e:
+        print(e)
+
 
 

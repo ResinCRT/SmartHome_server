@@ -2,6 +2,7 @@ from mqtt.mqtt import MqttSub
 from DBmanager import *
 from utilsocket import DbSocket, FileSocket
 from myparser import get_arguments
+from emergency import *
 from decoder import *
 import json
 import time
@@ -14,8 +15,8 @@ def mqtt_main():
     file_port = 8890
     if host == None:  # set Default host IP and mqtt Topic
         host = "192.168.0.6"
-        topic = "IoT3/home/#"
-
+        topic = "iot3/#"
+    conf = get_conf()
     print(host)
     print(topic)
     subscriber = MqttSub(host, topic)
@@ -41,11 +42,11 @@ def mqtt_main():
 
     def store_data(client, userdata, msg):
         datas = rf"{msg.payload.decode('utf-8')}"
-        print(datas)
+        print("message:", datas)
         try:
-            json_data = json.loads(datas)
+            # json_data = json.loads(datas)
+            check_emergency(msg, subscriber.client, conf)
             soc.update_dict(msg)
-            print(soc.dict_data)
         except json.JSONDecodeError:
             print("JSON decode fail : msg is not JSON")
         # subscriber.client.publish('IoT3/home/living/LED/info', r'send_to_LED', 1)
@@ -60,7 +61,7 @@ def mqtt_main():
 
         # <<<<
         try:
-            print("message arriveed from socket")
+            print("message arrived from socket")
             print(f"data:{data}")
             target_topic, msg = soc.handle_request(data)
             if target_topic != 'iot_app':
@@ -84,6 +85,7 @@ def mqtt_main():
 
     def print_data(client, userdata, msg):
         print(str(msg.payload))
+
     soc.set_callback(send_order)
     subscriber.set_on_message(store_data)
     subscriber.connect_default()
@@ -97,6 +99,10 @@ def mqtt_main():
     publish_by_time(3)
     while True:
         print("main thread running")
+        data = input(">>")
+        if data == 'q':
+            with open('setting.conf', "w", encoding='utf8') as f:
+                soc.getJson(f)
         time.sleep(4)
 
 
