@@ -31,16 +31,19 @@ def mqtt_main():
     print(soc)
     print(filesoc)
     # soc = AndroidSocket("", server_port)
-    def store_DB(client, userdata, msg):
-        message = msg.payload.json()
 
-        dict_data = {"client": str(client),
-                     "userdata": str(userdata),
-                     "msg": message}
-        cli = test_db.db_client['testDB']['test2']
-        res = cli.insert_one(dict_data)
-        lists = cli.find().sort("_id", -1).limit(1)
-        print(f"message from topic[{subscriber.topic}]:{lists[0]['msg']}")
+
+    # def store_DB(client, userdata, msg):
+    #     message = msg.payload.json()
+    #
+    #     dict_data = {"client": str(client),
+    #                  "userdata": str(userdata),
+    #                  "msg": message}
+    #     cli = test_db.db_client['testDB']['test2']
+    #     res = cli.insert_one(dict_data)
+    #     lists = cli.find().sort("_id", -1).limit(1)
+    #     print(f"message from topic[{subscriber.topic}]:{lists[0]['msg']}")
+
 
     def store_data(client, userdata, msg):
         datas = rf"{msg.payload.decode('utf-8')}"

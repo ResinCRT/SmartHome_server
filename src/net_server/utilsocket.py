@@ -44,11 +44,11 @@ class DbSocket(AndroidSocket):
             else:
                 try:
                     dict_before_json = {f"{target}": self.dict_data[f'{target}']}
-                    output = json.dumps(dict_before_json)
+                    result = json.dumps(dict_before_json)
                 except KeyError:
                     dict_before_json = {"Error": "Invalid Key" }
 
-            return target_topic, output
+            return target_topic, result
 
 
 
