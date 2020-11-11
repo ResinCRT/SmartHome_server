@@ -12,7 +12,7 @@ def mqtt_main():
     server_port = 8888
     file_port = 8890
     if host == None:  # set Default host IP and mqtt Topic
-        host = "192.168.0.6"
+        host = "192.168.0.109"
         topic = "iot3/#"
     emerg = Emergency()
     emerg.init()
@@ -104,6 +104,7 @@ def mqtt_main():
     publish_by_time(3)
     while True:
         print("main thread running")
+        print(soc.dict_data)
         time.sleep(4)
 
 

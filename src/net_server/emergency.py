@@ -48,10 +48,10 @@ class Emergency:
         water_state = False
 
         if 'toilet' in datas:
-            if 'PIR' in datas['toilet']:
-                PIR_state = bool(datas['toilet']['PIR']['PIR'])
-            if 'waterSensor' in datas['toilet']:
-                water_state = bool(datas['toilet']['waterSensor']['waterSensor'])
+            if 'pir_s' in datas['toilet']:
+                PIR_state = bool(datas['toilet']['pir_s']['pir_s'])
+            if 'wat_s' in datas['toilet']:
+                water_state = bool(datas['toilet']['wat_s']['wat_s'])
             # print(f'PIR : {PIR_state} \nwater : {water_state}')
             if not PIR_state and water_state and 'toilet' not in self.timestamp:
                 self.timestamp['toilet'] = [time.time(), 30]
@@ -59,10 +59,10 @@ class Emergency:
             elif not PIR_state and water_state and 'toilet' in self.timestamp:
                 if time.time() - self.timestamp['toilet'][0] >= self.timestamp['toilet'][1]:
                     print('30sec passed')
-                    client.publish(f'iot_app/emergency', f'toilet/waterSensor/flood', 2)
+                    client.publish(f'iot_app/emergency', f'toilet/wat_s/flood', 2)
             elif not (not PIR_state and water_state) and 'toilet' in self.timestamp:
                 self.timestamp.pop('toilet', None)
-                client.publish(f'iot_app/emergency', f'toilet/waterSensor/stopped', 2)
+                client.publish(f'iot_app/emergency', f'toilet/wat_s/stop', 2)
 
 
 
