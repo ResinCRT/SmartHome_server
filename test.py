@@ -10,7 +10,7 @@ import time
 import json
 
 if __name__ == "__main__":
-    host = '192.168.0.6'
+    host = '192.168.0.138'
     port = 1883
     soc = MqttNode(host)
     soc.set_topic('#')
@@ -19,13 +19,13 @@ if __name__ == "__main__":
         ins = input(">>")
         PIR = {}
         waterSensor = {}
-        waterSensor['waterSensor'] = int(ins.split()[1])
-        PIR['PIR'] = int(ins.split()[0])
+        waterSensor['wat_s'] = int(ins.split()[1])
+        PIR['pir_s'] = int(ins.split()[0])
         out_P = json.dumps(PIR)
         out_w = json.dumps(waterSensor)
-        soc.client.publish('iot3/toilet/PIR', out_P, 1)
+        soc.client.publish('iot3/toilet/pir_s', out_P, 1)
         time.sleep(1)
-        soc.client.publish('iot3/toilet/waterSensor', out_w, 1)
+        soc.client.publish('iot3/toilet/wat_s', out_w, 1)
     # datas = {}
     # datas['Humi'] = 10
     # datas['Temp'] = 35

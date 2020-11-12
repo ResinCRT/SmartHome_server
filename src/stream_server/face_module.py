@@ -9,6 +9,14 @@ class FaceModule(FaceRecog):
         self.node.set_topic(topic)
 
     def recog_action(self, frame):
+        for face in self.known_face_names:
+            if face in self.face_names:
+                temp = 'iot3/door/door/info'
+                print(f'face:{face} distance: {self.distances[0]:.2f}')
+                self.node.client.publish(self.node.topic, rf"Face recognized: {face}", 1)
+                self.node.client.publish(temp, r"255", 1)
+
+    def unknown_action(self, frame):
         self.node.client.publish(self.node.topic, r"Unknown Face recognized",1)
 
     def init(self):

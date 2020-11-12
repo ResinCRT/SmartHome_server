@@ -11,8 +11,9 @@ class DbSocket(AndroidSocket):
         self.dict_data = {}
         self.flag = True
         self.conf = None
+        self.sync_data = {}
 
-    def check(self):
+    def synchronize(self):
         pass
 
     def update_dict(self, msg):
@@ -27,11 +28,9 @@ class DbSocket(AndroidSocket):
     def getJson(self, file=None):
         if type(self.dict_data) == dict:
             if file:
-                return json.dump(self.dict_data, file,indent=4)
+                return json.dump(self.dict_data, file, indent=4)
             else:
                 return json.dumps(self.dict_data)
-
-
 
     def handle_request(self, data):
         target_topic, msg = decoder_test(data)
@@ -49,8 +48,6 @@ class DbSocket(AndroidSocket):
                     dict_before_json = {"Error": "Invalid Key" }
 
             return target_topic, result
-
-
 
     def set_flag(self, boolOP):
         self.flag = boolOP
