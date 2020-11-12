@@ -10,7 +10,8 @@
 
 3. 동시실행
 
-    mainserver.py 실행, 서버 IP / 수신 topic argument로 입력
+    mainserver.py 실행, 서버 IP / 수신 topic argument로 입력 (실제 실행 시에는 iot3/+/+) 
+    ex) python mainserver.py 192.168.0.2 iot3/+/+
 
 
 ### 요구 패키지
