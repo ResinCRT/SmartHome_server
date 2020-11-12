@@ -13,11 +13,12 @@ class FaceModule(FaceRecog):
             if face in self.face_names:
                 temp = 'iot3/door/door/info'
                 print(f'face:{face} distance: {self.distances[0]:.2f}')
-                self.node.client.publish(self.node.topic, rf"Face recognized: {face}", 1)
-                self.node.client.publish(temp, r"255", 1)
+                self.node.client.publish(self.node.topic, rf"Face recognized: {face}", 2)
+                self.node.client.publish(temp, r"255", 2)
+                self.node.client.loop_stop()
 
     def unknown_action(self, frame):
-        self.node.client.publish(self.node.topic, r"Unknown Face recognized",1)
+        self.node.client.publish(self.node.topic + '/unknown', r"Unknown Face recognized",1)
 
     def init(self):
         self.node.connect_default()

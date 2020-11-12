@@ -25,6 +25,7 @@ class FaceRecog():
             if ext == '.jpg':
                 self.known_face_names.append(name)
                 pathname = os.path.join(self.dirname, filename)
+                print(pathname)
                 img = face_recognition.load_image_file(pathname)
                 face_encoding = face_recognition.face_encodings(img)[0]
                 self.known_face_encodings.append(face_encoding)
@@ -115,6 +116,9 @@ class FaceRecog():
         action = 0 # 0 = No face, 1 = recogized, 2 = unknown
         # Grab a single frame of video
         _, frame = self.camera.get_raw_frame()
+
+        dist = 1
+
         # Resize frame of video to 1/4 size for faster face recognition processing
         # small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
         small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
@@ -141,10 +145,10 @@ class FaceRecog():
                 # tolerance: How much distance between faces to consider it a match. Lower is more strict.
                 # 0.6 is typical best performance.
                 name = "Unknown"
-                if min_value < 0.5:
+                if min_value < 0.43:
                     index = np.argmin(distances)
                     name = self.known_face_names[index]
-                    self.distances.append(min_value)
+                    dist = min_value
                     action = 1 # known
                 else:
                     action = 2 # unknown face recognized
@@ -170,7 +174,7 @@ class FaceRecog():
             cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
         if action == 1:
-            self.recog_action(frame)
+            self.recog_action(frame, dist)
         elif action == 2:
             self.unknown_action(frame)
 

@@ -13,7 +13,7 @@ def decoder_test(req):
                     topic = 'iot_app'
                     msg = req
                 elif len(req) >= 3:
-                    topic += f'{req[0]}'
+                    topic += f'iot3/{req[0]}'
                     topic += f'/{req[1]}/info'
                     temp = req[2]
                     if req[2] == 'ON':

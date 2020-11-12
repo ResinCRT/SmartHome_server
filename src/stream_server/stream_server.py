@@ -5,7 +5,22 @@ from src.util.USBcam import *
 from src.stream_server.face_module import FaceModule
 from src.util.myparser import get_arguments
 
+
+
+class MainModule:
+    def __init__(self):
+        self.camera = USBCam(show=True)
+        self.host, self.topic = flask_arguments()
+        self.face = None
+
+
+    def init(self):
+        self.face = FaceModule(self.host, 'iot_app/unknown', 'static/knowns')
+        self.face.init()
+
+
 app = Flask(__name__)
+server_module = MainModule()
 
 @app.route('/')
 def index():
@@ -14,16 +29,19 @@ def index():
 
 @app.route('/video_fed')
 def video_fed():
-    camera = USBCam(show=True)
+    # camera = USBCam(show=True)
+    camera = server_module.camera
     return Response(camera.run(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 @app.route('/video_feed')
 def video_feed():
-    host, _ = flask_arguments()
-    rec = FaceModule(host, 'iot_app/unknown', 'static/knowns')
-    rec.init()
+    # host, _ = flask_arguments()
+    # rec = FaceModule(host, 'iot_app/unknown', 'static/knowns')
+    # rec.init()
+    rec = server_module.face
     return Response(rec.run(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 
 @app.route('/video_snap')
@@ -51,6 +69,7 @@ def flask_arguments():
 
 def stream_main():
     host, _ = flask_arguments()
+    server_module.init()
     app.run(host=host, port=7072, debug=False)
 
 

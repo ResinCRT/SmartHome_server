@@ -12,8 +12,8 @@ def mqtt_main():
     server_port = 8888
     file_port = 8890
     if host == None:  # set Default host IP and mqtt Topic
-        host = "192.168.0.6"
-        topic = "iot3/+/+"
+        host = "192.168.0.138"
+        topic = "iot3/+/+/"
     emerg = Emergency()
     emerg.init()
     print(emerg.conf)
