@@ -3,16 +3,16 @@ from src.util.mqtt import MqttNode
 
 
 class FaceModule(FaceRecog):
-    def __init__(self, host, topic, path):
-        super().__init__(path)
+    def __init__(self, host, topic, path,cam):
+        super().__init__(path, cam)
         self.node = MqttNode(host)
         self.node.set_topic(topic)
 
-    def recog_action(self, frame):
+    def recog_action(self, frame, dist):
         for face in self.known_face_names:
             if face in self.face_names:
                 temp = 'iot3/door/door/info'
-                print(f'face:{face} distance: {self.distances[0]:.2f}')
+                print(f'face:{face} distance: {dist:.2f}')
                 self.node.client.publish(self.node.topic, rf"Face recognized: {face}", 2)
                 self.node.client.publish(temp, r"255", 2)
                 self.node.client.loop_stop()

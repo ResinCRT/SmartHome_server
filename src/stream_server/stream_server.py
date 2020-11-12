@@ -9,14 +9,21 @@ from src.util.myparser import get_arguments
 
 class MainModule:
     def __init__(self):
-        self.camera = USBCam(show=True)
+        self.camera = USBCam(show=True, framerate=15, width=250, height=500)
         self.host, self.topic = flask_arguments()
         self.face = None
-
 
     def init(self):
         self.face = FaceModule(self.host, 'iot_app/unknown', 'static/knowns')
         self.face.init()
+
+
+def flask_arguments():
+    host, _ = get_arguments()
+    topic = 'iot_app'
+    if not host:
+        host = '192.168.0.6'
+    return host, topic
 
 
 app = Flask(__name__)
@@ -43,7 +50,6 @@ def video_feed():
     return Response(rec.run(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-
 @app.route('/video_snap')
 def video_snap():
     camera = USBCam(show=True)
@@ -54,18 +60,13 @@ def video_snap():
 def shot():
     return render_template('snap.html')
 
+
 def gen(fr):
     while True:
         jpg_bytes = fr.get_jpg_bytes()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + jpg_bytes + b'\r\n\r\n')
 
-def flask_arguments():
-    host, _ = get_arguments()
-    topic = 'iot_app'
-    if not host:
-        host = '192.168.0.6'
-    return host, topic
 
 def stream_main():
     host, _ = flask_arguments()

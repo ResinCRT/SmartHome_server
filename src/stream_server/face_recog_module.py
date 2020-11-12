@@ -8,12 +8,15 @@ import numpy as np
 from _thread import start_new_thread
 
 class FaceRecog():
-    def __init__(self, path='knowns'):
+    def __init__(self, path='knowns', cam=None):
         # Using OpenCV to capture from device 0. If you have trouble capturing
         # from a webcam, comment the line below out and use a video file
         # instead.
-        self.camera = USBCam(show=True, framerate=15)
-
+        self.camera = None
+        if not cam:
+            self.camera = USBCam(show=True, framerate=15, width=250, height=500)
+        else:
+            self.camera = cam
         self.known_face_encodings = []
         self.known_face_names = []
 
