@@ -9,7 +9,12 @@ from src.util.mqtt import MqttNode
 import time
 import json
 
-if __name__ == "__main__":
+
+data = {'test': 0, 'test2': 1}
+key, value = list(data.items())[0]
+print(data.items())
+print(key, ':', value)
+if __name__ == "dfd":
     host = '192.168.0.138'
     port = 1883
     soc = MqttNode(host)

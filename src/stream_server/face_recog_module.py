@@ -14,7 +14,7 @@ class FaceRecog():
         # instead.
         self.camera = None
         if not cam:
-            self.camera = USBCam(show=True, framerate=15, width=250, height=500)
+            self.camera = USBCam(show=True, width=250, height=500)
         else:
             self.camera = cam
         self.known_face_encodings = []

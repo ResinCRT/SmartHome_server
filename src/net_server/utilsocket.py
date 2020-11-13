@@ -20,13 +20,13 @@ class DbSocket(AndroidSocket):
             if room in self.dict_data:
                 if sensor in self.dict_data[room]:
                     if type(self.dict_data[room][sensor]) == dict:
-                        _, d_value = self.dict_data[room][sensor].items()[0]
-                        if d_value != value:
-                            message[key] = value
+                        _, d_value = list(self.dict_data[room][sensor].items())[0]
+                        if int(d_value) != int(value):
+                            message[key] = int(value)
                 else:
-                    message[key] = value
+                    message[key] = int(value)
             else:
-                message[key] = value
+                message[key] = int(value)
         return message
 
     def update_dict(self, msg):

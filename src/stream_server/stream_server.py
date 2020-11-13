@@ -6,14 +6,16 @@ from src.stream_server.face_module import FaceModule
 from src.util.myparser import get_arguments
 
 
-
 class MainModule:
     def __init__(self):
-        self.camera = USBCam(show=True, width=320, height=240)
-        self.host, self.topic = flask_arguments()
+        self.camera = None
+        self.host, self.topic = None, None
         self.face = None
 
     def init(self):
+        self.camera = USBCam(show=True)
+        print('main camera init')
+        self.host, self.topic = flask_arguments()
         self.face = FaceModule(self.host, 'iot_app/unknown', 'static/knowns', self.camera)
         self.face.init()
 
@@ -70,6 +72,7 @@ def gen(fr):
 
 def stream_main():
     host, _ = flask_arguments()
+
     server_module.init()
     app.run(host=host, port=7072, debug=False)
 
