@@ -41,7 +41,7 @@ class Emergency:
                         # 상하 수치 체크
                         if ((comp[1] == "HIGH" and comp[0] < dat)
                          or (comp[1] == "LOW" and comp[0] > dat)):
-                            client.publish(f'iot_app/emergency', f'{room}/{sensor}/{opt}/{comp[1]}', 2)
+                            client.publish(f'iot_app/emergency', f'{room}/{sensor}/{opt}/{comp[1]}', qos=1)
 
     def check_toilet(self, datas, client):
         PIR_state = False
@@ -59,10 +59,10 @@ class Emergency:
             elif not PIR_state and water_state and 'toilet' in self.timestamp:
                 if time.time() - self.timestamp['toilet'][0] >= self.timestamp['toilet'][1]:
                     print('30sec passed')
-                    client.publish(f'iot_app/emergency', f'toilet/wat_s/flood', 2)
+                    client.publish(f'iot_app/emergency', f'toilet/wat_s/flood', qos=1)
             elif not (not PIR_state and water_state) and 'toilet' in self.timestamp:
                 self.timestamp.pop('toilet', None)
-                client.publish(f'iot_app/emergency', f'toilet/wat_s/stop', 2)
+                client.publish(f'iot_app/emergency', f'toilet/wat_s/stop', qos=1)
 
 
 

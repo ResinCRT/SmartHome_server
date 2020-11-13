@@ -9,12 +9,12 @@ from src.util.myparser import get_arguments
 
 class MainModule:
     def __init__(self):
-        self.camera = USBCam(show=True, framerate=15, width=250, height=500)
+        self.camera = USBCam(show=True, width=320, height=240)
         self.host, self.topic = flask_arguments()
         self.face = None
 
     def init(self):
-        self.face = FaceModule(self.host, 'iot_app/unknown', 'static/knowns')
+        self.face = FaceModule(self.host, 'iot_app/unknown', 'static/knowns', self.camera)
         self.face.init()
 
 
@@ -37,8 +37,8 @@ def index():
 @app.route('/video_fed')
 def video_fed():
     # camera = USBCam(show=True)
-    camera = server_module.camera
-    return Response(camera.run(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    rec = server_module.face
+    return Response(rec.shot, mimetype='image/jpeg')
 
 
 @app.route('/video_feed')

@@ -13,7 +13,7 @@ def mqtt_main():
     file_port = 8890
     if host == None:  # set Default host IP and mqtt Topic
         host = "192.168.0.138"
-        topic = "iot3/+/+/"
+        topic = "iot3/+/+"
     emerg = Emergency()
     emerg.init()
     print(emerg.conf)
@@ -69,7 +69,7 @@ def mqtt_main():
             print(f"data:{data}")
             target_topic, msg = soc.handle_request(data)
             if target_topic != 'iot_app':
-                subscriber.client.publish(target_topic, msg, 1)
+                subscriber.client.publish(target_topic, msg, qos=1)
             else:
                 msg = msg.encode('utf-8')
                 soc.client_sock.sendall(msg)
@@ -80,7 +80,7 @@ def mqtt_main():
     def publish_by_time(timer):
         def publishing():
             while True:
-                subscriber.client.publish('iot_app', soc.getJson(), 1)
+                subscriber.client.publish('iot_app', soc.getJson(), qos=1)
                 time.sleep(timer)
                 emerg.check_toilet(soc.dict_data, subscriber.client)
 
@@ -105,7 +105,13 @@ def mqtt_main():
     print("main thread running")
     while True:
         # main task
-        time.sleep(4)
+        sync_message = soc.synchronize()
+        if len(sync_message.items()) > 0:
+            subscriber.send_multiple_message(sync_message)
+            print(f'[Server]: Sync {len(sync_message.items())} items')
+        else:
+            print(f'[Server]: sensor synchronized')
+        time.sleep(1)
 
 
 if __name__ == "__main__":

@@ -3,21 +3,23 @@ import time
 
 
 class USBCam:
-    def __init__(self, show=False, framerate=25,width=640,height=480):
+    def __init__(self, show=False, framerate=25, width=640, height=480):
         self.size = (width, height)
+        print(self.size)
         self.show = show
         self.framerate = framerate
 
         self.cap = cv2.VideoCapture(0) #0번카메라
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH,self.size[0])
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT,self.size[1])
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.size[0])
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.size[1])
+        # self.cap.set(cv2.CAP_PROP_FPS, self.framerate)
 
 
     def snapshot(self):#jpeg 이미지 1장 리턴
         retval, frame = self.cap.read() #프레임 캡쳐, frame:numpy 배열 - BGR
-        # if retval:
-        #     _, jpg = cv2.imencode('.jpg', frame)
-        #     return jpg.tobytes()
+        if retval:
+            _, jpg = cv2.imencode('.jpg', frame)
+            return jpg.tobytes()
         return frame
 
     def get_raw_frame(self):
@@ -58,8 +60,21 @@ class MJpegStreamCam(USBCam):
 
             
 if __name__ == '__main__':
+    # cam = USBCam(width=480, height=360)
     cam = USBCam()
-    time.sleep(1)
-    img = cam.snapshot()
-    cv2.imshow('Img', img)
-    pass
+    print(cam)
+
+    while True:
+        ret, fr = cam.cap.read()
+
+        # show the frame
+        cv2.imshow("Frame", fr)
+        key = cv2.waitKey(1) & 0xFF
+
+        # if the `q` key was pressed, break from the loop
+        if key == ord("q"):
+            break
+
+    # do a bit of cleanup
+    cv2.destroyAllWindows()
+    print('finish')

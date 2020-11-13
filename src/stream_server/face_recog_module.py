@@ -42,11 +42,12 @@ class FaceRecog():
     def __del__(self):
         del self.camera
 
-    def recog_action(self, frame):
+    def recog_action(self, frame, dist):
         pass
 
     def unknown_action(self, frame):
         pass
+
     def recog_start(self, input_frame, raw_frame):
         pass
 
@@ -80,7 +81,7 @@ class FaceRecog():
                 # tolerance: How much distance between faces to consider it a match. Lower is more strict.
                 # 0.6 is typical best performance.
                 name = "Unknown"
-                if min_value < 0.5:
+                if min_value < 0.2:
                     index = np.argmin(distances)
                     name = self.known_face_names[index]
                     self.distances.append(min_value)
@@ -148,7 +149,7 @@ class FaceRecog():
                 # tolerance: How much distance between faces to consider it a match. Lower is more strict.
                 # 0.6 is typical best performance.
                 name = "Unknown"
-                if min_value < 0.43:
+                if min_value < 0.42:
                     index = np.argmin(distances)
                     name = self.known_face_names[index]
                     dist = min_value

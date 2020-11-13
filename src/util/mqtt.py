@@ -23,10 +23,10 @@ class MqttNode:
     def on_message(self, client, userdata, msg):
         print(str(msg.payload))
 
-    def set_on_publish(self,fun):
+    def set_on_publish(self, fun):
         self.client.on_publish = fun
 
-    def set_on_connect(self,fun):
+    def set_on_connect(self, fun):
         self.client.on_connect = fun
 
     def set_on_message(self,fun):
@@ -40,6 +40,10 @@ class MqttNode:
 
     def run_forever(self):
         self.client.loop_forever()
+
+    def send_multiple_message(self, dict_data):
+        for key, value in dict_data.items():
+            self.client.publish(key, rf'{value}', qos=1)
 
 
 class MqttSub(MqttNode):

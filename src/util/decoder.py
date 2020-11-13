@@ -3,7 +3,7 @@ import json
 
 def decoder_test(req):
     #topic = 'IoT3/home'
-    topic = ''
+    topic = 'iot3'
     msg = ''
     try:
         if type(req) is str:
@@ -13,7 +13,7 @@ def decoder_test(req):
                     topic = 'iot_app'
                     msg = req
                 elif len(req) >= 3:
-                    topic += f'iot3/{req[0]}'
+                    topic += f'/{req[0]}'
                     topic += f'/{req[1]}/info'
                     temp = req[2]
                     if req[2] == 'ON':
@@ -28,13 +28,20 @@ def decoder_test(req):
     return topic, msg
 
 
+def decode_topic(topic):
+    arr = topic.split('/')
+    if arr[-1] == 'info':
+        arr.pop()
+    return arr[-2], arr[-1]
+
+
 def msg_to_tuple(msg):
     data = rf"{msg.payload.decode('utf-8')}"
     data_dict = json.loads(data)
     output = {}
-    topic = msg.topic.split('/')
+    room, sensor = decode_topic(msg.topic)
     try:
-        return topic[-2], topic[-1], data_dict
+        return room, sensor, data_dict
     except Exception as e:
         print(e)
 

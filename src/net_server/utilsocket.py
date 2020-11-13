@@ -1,5 +1,5 @@
 from src.util.android_socket import AndroidSocket
-from src.util.decoder import msg_to_tuple, decoder_test
+from src.util.decoder import *
 import threading
 from _thread import start_new_thread
 import json
@@ -14,7 +14,20 @@ class DbSocket(AndroidSocket):
         self.sync_data = {}
 
     def synchronize(self):
-        pass
+        message = {}
+        for key, value in self.sync_data.items():
+            room, sensor = decode_topic(key)
+            if room in self.dict_data:
+                if sensor in self.dict_data[room]:
+                    if type(self.dict_data[room][sensor]) == dict:
+                        _, d_value = self.dict_data[room][sensor].items()[0]
+                        if d_value != value:
+                            message[key] = value
+                else:
+                    message[key] = value
+            else:
+                message[key] = value
+        return message
 
     def update_dict(self, msg):
         room, sensor, data = msg_to_tuple(msg)
@@ -24,6 +37,9 @@ class DbSocket(AndroidSocket):
             if room not in self.dict_data:
                 self.dict_data[room] = {}
             self.dict_data[room][sensor] = data
+
+    def update_sync(self, topic, msg):
+        self.sync_data[topic] = msg
 
     def getJson(self, file=None):
         if type(self.dict_data) == dict:
@@ -35,6 +51,7 @@ class DbSocket(AndroidSocket):
     def handle_request(self, data):
         target_topic, msg = decoder_test(data)
         if type(msg) == str:
+            self.update_sync(target_topic, msg)
             return target_topic, msg
         elif type(msg) == list:
             target = msg[1]
