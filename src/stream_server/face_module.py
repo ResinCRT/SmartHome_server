@@ -28,7 +28,7 @@ class FaceModule(FaceRecog):
     def recog_action(self, frame, dist):
         for face in self.known_face_names:
             if face in self.face_names:
-                temp = 'iot3/door/door/info'
+                temp = 'iot3/living/door/info'
                 print(f'face:{face} distance: {dist:.2f}')
                 # self.node.client.publish(self.node.topic, rf"Face recognized: {face}", qos=1)
                 start_new_thread(self.send_socket_msg)
